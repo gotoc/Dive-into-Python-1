@@ -65,7 +65,11 @@ class KnownValues(unittest.TestCase):
                     (3844, 'MMMDCCCXLIV'),
                     (3888, 'MMMDCCCLXXXVIII'),
                     (3940, 'MMMCMXL'),
-                    (3999, 'MMMCMXCIX'))
+                    (3999, 'MMMCMXCIX'),
+                    (4000, 'MMMM'),
+                    (4500, 'MMMMD'),
+                    (4888, 'MMMMDCCCLXXXVIII'),
+                    (4999, 'MMMMCMXCIX'))
 
     def testToRomanKnownValues(self):
         """toRoman should give known result with known input"""
@@ -82,7 +86,7 @@ class KnownValues(unittest.TestCase):
 class ToRomanBadInput(unittest.TestCase):
     def testTooLarge(self):
         """toRoman should fail with large input"""
-        self.assertRaises(roman.OutOfRangeError, roman.toRoman, 4000)
+        self.assertRaises(roman.OutOfRangeError, roman.toRoman, 5000)
 
     def testZero(self):
         """toRoman should fail with 0 input"""
@@ -99,7 +103,7 @@ class ToRomanBadInput(unittest.TestCase):
 class FromRomanBadInput(unittest.TestCase):
     def testTooManyRepeatedNumerals(self):
         """fromRoman should fail with too many repeated numerals"""
-        for s in ('MMMM', 'DD', 'CCCC', 'LL', 'XXXX', 'VV', 'IIII'):
+        for s in ('MMMMM', 'DD', 'CCCC', 'LL', 'XXXX', 'VV', 'IIII'):
             self.assertRaises(roman.InvalidRomanNumeralError, roman.fromRoman, s)
 
     def testRepeatedPairs(self):
@@ -113,10 +117,14 @@ class FromRomanBadInput(unittest.TestCase):
                   'MCMC', 'XCX', 'IVI', 'LM', 'LD', 'LC'):
             self.assertRaises(roman.InvalidRomanNumeralError, roman.fromRoman, s)
 
+    def testBlank(self):
+        """ fromRoman should fail with blank string """
+        self.assertRaises(roman.InvalidRomanNumeralError, roman.fromRoman, "")
+
 class SanityCheck(unittest.TestCase):
     def testSanity(self):
         """fromRoman(toRoman(n))==n for all n"""
-        for integer in range(1, 4000):
+        for integer in range(1, 5000):
             numeral = roman.toRoman(integer)
             result = roman.fromRoman(numeral)
             self.assertEqual(integer, result)
